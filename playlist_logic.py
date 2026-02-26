@@ -109,8 +109,13 @@ def merge_playlists(a: PlaylistMap, b: PlaylistMap) -> PlaylistMap:
 def compute_playlist_stats(playlists: PlaylistMap) -> Dict[str, object]:
     """Compute statistics across all playlists."""
     all_songs: List[Song] = []
+    seen: set = set()
     for songs in playlists.values():
-        all_songs.extend(songs)
+        for s in songs:
+            key = (s.get("title"), s.get("artist"))
+            if key not in seen:
+                seen.add(key)
+                all_songs.append(s)
 
     hype = playlists.get("Hype", [])
     chill = playlists.get("Chill", [])
